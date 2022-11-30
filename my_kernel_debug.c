@@ -31,7 +31,7 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
     struct ioctl_thread_struct ret_thread = {0};
 
     struct pci_parameters pci_params = {0};
-    struct pci_dev* pci_dev;
+    struct pci_dev* pci_dev = {0};
     struct ioctl_pci_dev ret_pci = {0};
     switch (cmd) {
         case IOCTL_GET_THREADSTRUCT:
@@ -65,15 +65,19 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
                 return -1;
             }
 
-            while (pci_dev = pci_get_device(pci_params.major, pci_params.minor, pci_dev)) {
-                ret_pci.devfn = pci_dev->devfn;
-                ret_pci.device = pci_dev->device;
-                ret_pci.hdr_type = pci_dev->hdr_type;
-                ret_pci.revision = pci_dev->revision;
-                ret_pci.vendor = pci_dev->vendor;
-                ret_pci.clas = pci_dev->class;
-                copy_to_user(pci_params.write_pointer, &ret_pci, sizeof(struct ioctl_pci_dev));
+            pci_dev = pci_get_device(pci_params.major, pci_params.minor, pci_dev);
+            if (pci_dev == NULL) {
+                pr_alert("Failed to read PCI with major %d and minor %d\n", pci_params.major, pci_params.minor);
+                return -1;
             }
+            ret_pci.devfn = pci_dev->devfn;
+            ret_pci.device = pci_dev->device;
+            ret_pci.hdr_type = pci_dev->hdr_type;
+            ret_pci.revision = pci_dev->revision;
+            ret_pci.vendor = pci_dev->vendor;
+            ret_pci.clas = pci_dev->class;
+            copy_to_user(pci_params.write_pointer, &ret_pci, sizeof(struct ioctl_pci_dev));
+            
             break;
     }
     return SUCCESS;

@@ -8,7 +8,7 @@ struct ioctl_pci_dev {
     unsigned int clas;
     unsigned char revision;
     unsigned char hdr_type;
-=};
+};
 
 struct ioctl_thread_struct {
     unsigned long 	sp; /* [GR1 ] kernel stack pointer */
