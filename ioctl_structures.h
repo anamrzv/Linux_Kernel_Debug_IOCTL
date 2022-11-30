@@ -28,11 +28,11 @@ struct pci_parameters {
     struct ioctl_pci_dev* write_pointer;
     uint16_t major;
     uint16_t minor;
-}
+};
 
 struct thread_parameters {
     struct ioctl_thread_struct* write_pointer;
     uint16_t pid;
-}
+};
 
 #endif
