@@ -36,14 +36,14 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
     switch (cmd) {
         case IOCTL_GET_THREADSTRUCT:
             if (copy_from_user(&thread_params, (struct thread_parameters*) arg, sizeof(struct thread_parameters)) != 0 ) {
-                pr_alert("Failed to read thread parameters\n");
+                printk("Failed to read thread parameters\n");
                 return -1;
             }
 
-            pr_info("Got PID %d", thread_params.pid);
+            printk("Got PID %d", thread_params.pid);
             task = get_pid_task(find_get_pid(thread_params.pid), PIDTYPE_PID);
             if (task == NULL) {
-                pr_alert("Failed to read thread with PID %d\n", thread_params.pid);
+                printk("Failed to read thread with PID %d\n", thread_params.pid);
                 return -1;
             }
             thread = task->thread;
@@ -61,13 +61,13 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
             break;
         case IOCTL_GET_PCIDEV:
             if (copy_from_user(&pci_params, (struct pci_parameters*) arg, sizeof(struct pci_parameters)) != 0 ) {
-                pr_alert("Failed to read pci parameters\n");
+                printk("Failed to read pci parameters\n");
                 return -1;
             }
 
             pci_dev = pci_get_device(pci_params.major, pci_params.minor, pci_dev);
             if (pci_dev == NULL) {
-                pr_alert("Failed to read PCI with major %d and minor %d\n", pci_params.major, pci_params.minor);
+                printk("Failed to read PCI with major %d and minor %d\n", pci_params.major, pci_params.minor);
                 return -1;
             }
             ret_pci.devfn = pci_dev->devfn;
@@ -90,21 +90,21 @@ static struct file_operations fops = {
 
 static int ana_device_init(void) {
     int ret_val;
-    pr_info("Ana Debug Module is initializing...\n");
+    printk("Ana Debug Module is initializing...\n");
     ret_val = register_chrdev(ANA_IOC_MAGIC, DEVICE_NAME, &fops);
     if (ret_val < 0) {
-        pr_alert("Failed to register the character device %s, return code %d\n", DEVICE_NAME, ret_val);
+        printk("Failed to register the character device %s, return code %d\n", DEVICE_NAME, ret_val);
         return ret_val;
     }
 
-    pr_info("Successfully registered the character device %s with major number %d\n", DEVICE_NAME, ANA_IOC_MAGIC);
+    printk("Successfully registered the character device %s with major number %d\n", DEVICE_NAME, ANA_IOC_MAGIC);
  
     return SUCCESS;
 }
  
 static void ana_device_exit(void) {
     unregister_chrdev(ANA_IOC_MAGIC, DEVICE_NAME);
-    pr_alert("Successfully unregistered the character device %s\n", DEVICE_NAME);
+    printk("Successfully unregistered the character device %s\n", DEVICE_NAME);
 }
 
 
