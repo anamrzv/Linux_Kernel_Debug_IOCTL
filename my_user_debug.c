@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
         struct thread_parameters thread_params = { &thread, (uint16_t) argv[2] };
         uint8_t ret = ioctl(fd, IOCTL_GET_THREADSTRUCT, &thread_params);
         printf(ret);
-        print_pci(&pci_dev);
+        print_thread(&thread);
         if (ret == 0) print_thread(&thread);
     }
 
