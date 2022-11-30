@@ -51,9 +51,9 @@ int main(int argc, char **argv) {
         return -1;
     }
     
-    printf("Trying to request kernel for debug info about structure: %s\n", (char*) argv[0]);
+    printf("Trying to request kernel for debug info about structure: %s\n", (char*) argv[1]);
     
-    int fd = open(DEVICE_FILE, O_RDWR);
+    int fd = open(DEVICE_FILE, O_WRONLY);
     if (fd < 0) {
         printf("Couldn't open device file %s, check if it exists in /dev\n", DEVICE_FILE);
         return -1;
