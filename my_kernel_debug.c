@@ -6,6 +6,7 @@
 #include <linux/export.h> //for file operations
 #include <linux/pci.h>
 #include <linux/pid.h>
+#include <linux/processor.h>
 #include <linux/uaccess.h> //for user copy 
 
 #include <linux/cdev.h>
@@ -23,7 +24,7 @@
 #define DEVICE_NAME "ana_device"
 #define SUCCESS 0
 
-int device_ioctl(struct inode *inode, struct file *filp, unsigned int cmd, unsigned long arg) {
+long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
     struct thread_parameters thread_params = {0};
     struct task_struct* task = {0};
     struct thread_struct thread = {0};
@@ -67,7 +68,7 @@ int device_ioctl(struct inode *inode, struct file *filp, unsigned int cmd, unsig
             while (pci_dev = pci_get_device(pci_params.major, pci_params.minor, pci_dev)) {
                 ret_pci.devfn = pci_dev->devfn;
                 ret_pci.device = pci_dev->device;
-                ret_pci.driver_name = pci_dev->driver_name;
+                ret_pci.driver_name = pci_dev->driver;
                 ret_pci.hdr_type = pci_dev->hdr_type;
                 ret_pci.revision = pci_dev->revision;
                 ret_pci.vendor = pci_dev->vendor;
@@ -80,14 +81,14 @@ int device_ioctl(struct inode *inode, struct file *filp, unsigned int cmd, unsig
 }
 
 static struct file_operations fops = {
-	.ioctl = device_ioctl,
+	.unlocked_ioctl = device_ioctl,
 	.owner = THIS_MODULE, //macro: pointer to the module structure of this module
 };
 
 static int ana_device_init(void) {
     int ret_val;
     pr_info("Ana Debug Module is initializing...\n");
-    ret_val = register_chrdev(ANA_IOC_MAGIC, DRIVER_NAME, &fops);
+    ret_val = register_chrdev(ANA_IOC_MAGIC, DEVICE_NAME, &fops);
     if (ret_val < 0) {
         pr_alert("Failed to register the character device %s, return code %d\n", DEVICE_NAME, ret_val);
         return ret_val;
@@ -109,5 +110,5 @@ module_exit(ana_device_exit);
 
 MODULE_LICENSE("GPL"); //TODO:
 MODULE_DESCRIPTION("Module for sending debug info about task_struct");
-MODULE_VERSION("1.0")
+MODULE_VERSION("1.0");
  
