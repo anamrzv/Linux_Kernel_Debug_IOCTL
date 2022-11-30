@@ -13,3 +13,6 @@ load:
 
 unload:
 	rmmod ./my_kernel_debug.ko
+
+build_user:
+	gcc -c my_user_debug.c
