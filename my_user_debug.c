@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    printf(fd);
+    printf("%d",fd);
 
     if (option == PCI_DEV_OPTION) {
         struct ioctl_pci_dev pci_dev = {0};
