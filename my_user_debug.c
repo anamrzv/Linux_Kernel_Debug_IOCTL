@@ -1,13 +1,13 @@
 #include <stdio.h>
-#include <linux/ioctl.h>
+#include <sys/ioctl.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
 #include <inttypes.h>
 #include "ioctl_structures.h"
-#include <linux/pci.h>
-#include <linux/pid.h>
-#include <linux/processor.h>
+#include <sys/pci.h>
+#include <sys/pid.h>
+#include <sys/processor.h>
 
 #define ANA_IOC_MAGIC '\x45'
 #define PCI_DEV_OPTION 1
