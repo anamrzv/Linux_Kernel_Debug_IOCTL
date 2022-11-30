@@ -24,43 +24,46 @@
 #define SUCCESS 0
 
 int device_ioctl(struct inode *inode, struct file *filp, unsigned int cmd, unsigned long arg) {
+    struct thread_parameters thread_params = {0};
+    struct task_struct* task = {0};
+    struct thread_struct thread = {0};
+    struct ioctl_thread_struct ret_thread = {0};
+
+    struct pci_parameters pci_params = {0};
+    struct pci_dev* pci_dev;
+    struct ioctl_pci_dev ret_pci = {0};
     switch (cmd) {
         case IOCTL_GET_THREADSTRUCT:
-            struct thread_parameters thread_params = {0};
             if (copy_from_user(&thread_params, (struct thread_parameters*) arg, sizeof(struct thread_parameters)) != 0 ) {
                 pr_alert("Failed to read thread parameters\n");
                 return -1;
             }
 
             pr_info("Got PID %d", thread_params.pid);
-            struct task_struct* task = get_pid_task(find_get_pid(thread_params.pid), PIDTYPE_PID);
+            task = get_pid_task(find_get_pid(thread_params.pid), PIDTYPE_PID);
             if (task == NULL) {
                 pr_alert("Failed to read thread with PID %d\n", thread_params.pid);
                 return -1;
             }
-            struct thread_struct* thread = task->thread;
-            struct ioctl_thread_struct ret_thread = {0};
-            ret_thread.esp0 = thread->esp0;
-            ret_thread.fp = thread->fp;
-            ret_thread.ksp = thread->ksp;
-            ret_thread.lr = thread->lr;
-            ret_thread.pc = thread->pc;
-            ret_thread.seqstat = thread->seqstat;
-            ret_thread.single_step_addr = thread->single_step_addr;
-            ret_thread.sp = thread->sp;
-            ret_thread.usp = thread->usp;
-            ret_thread.wchan = thread->wchan;
+            thread = task->thread;
+            ret_thread.esp0 = thread.esp0;
+            ret_thread.fp = thread.fp;
+            ret_thread.ksp = thread.ksp;
+            ret_thread.lr = thread.lr;
+            ret_thread.pc = thread.pc;
+            ret_thread.seqstat = thread.seqstat;
+            ret_thread.single_step_addr = thread.single_step_addr;
+            ret_thread.sp = thread.sp;
+            ret_thread.usp = thread.usp;
+            ret_thread.wchan = thread.wchan;
             copy_to_user(thread_params.write_pointer, &ret_thread, sizeof(struct ioctl_thread_struct));
             break;
         case IOCTL_GET_PCIDEV:
-            struct pci_parameters pci_params = {0};
             if (copy_from_user(&pci_params, (struct pci_parameters*) arg, sizeof(struct pci_parameters)) != 0 ) {
                 pr_alert("Failed to read pci parameters\n");
                 return -1;
             }
 
-            struct pci_dev* pci_dev;
-            struct ioctl_pci_dev ret_pci = {0};
             while (pci_dev = pci_get_device(pci_params.major, pci_params.minor, pci_dev)) {
                 ret_pci.devfn = pci_dev->devfn;
                 ret_pci.device = pci_dev->device;
