@@ -15,4 +15,4 @@ unload:
 	rmmod ./my_kernel_debug.ko
 
 build_user:
-	gcc -c my_user_debug.c
+	gcc -c my_user_debug.c -l/usr/src/linux-headers-3.2.0-4-common/include/

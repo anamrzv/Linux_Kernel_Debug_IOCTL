@@ -6,7 +6,6 @@
 #include <inttypes.h>
 #include "ioctl_structures.h"
 #include <sys/pci.h>
-#include <sys/pid.h>
 #include <sys/processor.h>
 
 #define ANA_IOC_MAGIC '\x45'
