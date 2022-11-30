@@ -18,8 +18,8 @@
 
 #define ANA_IOC_MAGIC '\x45'
 
-#define IOCTL_GET_THREADSTRUCT _IOR(ANA_IOC_MAGIC, 0, struct thread_struct)
-#define IOCTL_GET_PCIDEV _IOR(ANA_IOC_MAGIC, 1, struct pci_dev)
+#define IOCTL_GET_THREADSTRUCT _IOR(ANA_IOC_MAGIC, 0, struct thread_parameters*)
+#define IOCTL_GET_PCIDEV _IOR(ANA_IOC_MAGIC, 1, struct pci_parameters*)
 
 #define DEVICE_NAME "ana_device"
 #define SUCCESS 0

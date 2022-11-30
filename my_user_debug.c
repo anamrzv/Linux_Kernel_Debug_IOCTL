@@ -5,17 +5,14 @@
 #include <string.h>
 #include <inttypes.h>
 #include "ioctl_structures.h"
-#include <sys/pci.h>
-#include <linux/pid.h>
-#include <sys/processor.h>
 
 #define ANA_IOC_MAGIC '\x45'
 #define PCI_DEV_OPTION 1
 #define THREAD_STRUCT_OPTION 2
 #define DEVICE_FILE "/dev/ana_device"
 
-#define IOCTL_GET_THREADSTRUCT _IOR(ANA_IOC_MAGIC, 0, struct thread_struct)
-#define IOCTL_GET_PCIDEV _IOR(ANA_IOC_MAGIC, 1, struct pci_dev)
+#define IOCTL_GET_THREADSTRUCT _IOR(ANA_IOC_MAGIC, 0, struct thread_parameters*)
+#define IOCTL_GET_PCIDEV _IOR(ANA_IOC_MAGIC, 1, struct pci_parameters*)
 
 void print_pci(struct ioctl_pci_dev* pci) {
     printf("devfn %d\n", pci->devfn);
