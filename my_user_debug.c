@@ -20,20 +20,19 @@ void print_pci(struct ioctl_pci_dev* pci) {
     printf("class %d\n", pci->clas);
     printf("revision %d\n", pci->revision );
     printf("hdr_type %d\n", pci->hdr_type);
-    printf("driver_name %s\n", pci->driver_name);
 }
 
 void print_thread(struct ioctl_thread_struct* th) {
-    printf("single_step_addr %d\n", th->single_step_addr);
-    printf("kernel stack pointer %d\n", th->ksp);
-    printf("saved status register %d\n", th->seqstat);
-    printf("SR of stack frame pt_regs %d\n", th->esp0);
-    printf("user stack pointer %d\n", th->usp);
-    printf("instruction pointer %d\n", th->pc);
-    printf("wchan %D\n", th->wchan);
+    // printf("single_step_addr %d\n", th->single_step_addr);
+    // printf("kernel stack pointer %d\n", th->ksp);
+    // printf("saved status register %d\n", th->seqstat);
+    // printf("SR of stack frame pt_regs %d\n", th->esp0);
+    // printf("user stack pointer %d\n", th->usp);
+    // printf("instruction pointer %d\n", th->pc);
+    // printf("wchan %D\n", th->wchan);
     printf("[GR1 ] kernel stack pointer %d\n", th->sp);
-    printf("[GR2 ] kernel frame pointer %d\n", th->fp);
-    printf("link register %d", th->lr);
+    // printf("[GR2 ] kernel frame pointer %d\n", th->fp);
+    // printf("link register %d", th->lr);
 }
 
 void main(int argc, char **argv) {

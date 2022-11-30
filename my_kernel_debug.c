@@ -47,16 +47,16 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
                 return -1;
             }
             thread = task->thread;
-            ret_thread.esp0 = thread.esp0;
-            ret_thread.fp = thread.fp;
-            ret_thread.ksp = thread.ksp;
-            ret_thread.lr = thread.lr;
-            ret_thread.pc = thread.pc;
-            ret_thread.seqstat = thread.seqstat;
-            ret_thread.single_step_addr = thread.single_step_addr;
+            // ret_thread.esp0 = thread.esp0;
+            // ret_thread.fp = thread.fp;
+            // ret_thread.ksp = thread.ksp;
+            // ret_thread.lr = thread.lr;
+            // ret_thread.pc = thread.pc;
+            // ret_thread.seqstat = thread.seqstat;
+            // ret_thread.single_step_addr = thread.single_step_addr;
             ret_thread.sp = thread.sp;
-            ret_thread.usp = thread.usp;
-            ret_thread.wchan = thread.wchan;
+            // ret_thread.usp = thread.usp;
+            // ret_thread.wchan = thread.wchan;
             copy_to_user(thread_params.write_pointer, &ret_thread, sizeof(struct ioctl_thread_struct));
             break;
         case IOCTL_GET_PCIDEV:
@@ -68,7 +68,6 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
             while (pci_dev = pci_get_device(pci_params.major, pci_params.minor, pci_dev)) {
                 ret_pci.devfn = pci_dev->devfn;
                 ret_pci.device = pci_dev->device;
-                ret_pci.driver_name = pci_dev->driver;
                 ret_pci.hdr_type = pci_dev->hdr_type;
                 ret_pci.revision = pci_dev->revision;
                 ret_pci.vendor = pci_dev->vendor;
