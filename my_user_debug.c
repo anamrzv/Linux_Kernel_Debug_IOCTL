@@ -63,11 +63,15 @@ int main(int argc, char **argv) {
         struct ioctl_pci_dev pci_dev = {0};
         struct pci_parameters pci_params = { &pci_dev, (uint16_t) argv[2], (uint16_t) argv[3] };
         uint8_t ret = ioctl(fd, IOCTL_GET_PCIDEV, &pci_params);
+        printf(ret);
+        print_pci(&pci_dev);
         if (ret == 0) print_pci(&pci_dev);
     } else if (option == THREAD_STRUCT_OPTION) {
         struct ioctl_thread_struct thread = {0};
         struct thread_parameters thread_params = { &thread, (uint16_t) argv[2] };
         uint8_t ret = ioctl(fd, IOCTL_GET_THREADSTRUCT, &thread_params);
+        printf(ret);
+        print_pci(&pci_dev);
         if (ret == 0) print_thread(&thread);
     }
 
