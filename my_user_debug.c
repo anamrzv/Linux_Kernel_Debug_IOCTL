@@ -15,19 +15,19 @@
 #define IOCTL_GET_PCIDEV _IOR(ANA_IOC_MAGIC, 1, struct pci_parameters*)
 
 void print_pci(struct ioctl_pci_dev* pci) {
-    printf("devfn %d\n", pci->devfn);
-    printf("vendor %d\n", pci->vendor);
-    printf("device %d\n", pci->device);
-    printf("class %d\n", pci->clas);
-    printf("revision %d\n", pci->revision );
-    printf("hdr_type %d\n", pci->hdr_type);
+    printf("devfn %u\n", pci->devfn);
+    printf("vendor %hu\n", pci->vendor);
+    printf("device %hu\n", pci->device);
+    printf("class %u\n", pci->clas);
+    printf("revision %u\n", pci->revision );
+    printf("hdr_type %u\n", pci->hdr_type);
 }
 
 void print_thread(struct ioctl_thread_struct* th) {
-    printf("es %d\n", th->es);
-    printf("ds %d\n", th->ds);
-    printf("fsindex %d\n", th->fsindex);
-    printf("gsindex %d\n", th->gsindex);
+    printf("es %hu\n", th->es);
+    printf("ds %hu\n", th->ds);
+    printf("fsindex %hu\n", th->fsindex);
+    printf("gsindex %hu\n", th->gsindex);
     printf("fbase %ld\n", th->fsbase);
     printf("gsbase %ld\n", th->gsbase);
     printf("[GR1 ] kernel stack pointer %ld\n", th->sp);
