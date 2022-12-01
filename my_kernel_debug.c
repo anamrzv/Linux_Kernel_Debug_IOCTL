@@ -8,7 +8,10 @@
 #include <linux/pid.h>
 #include <linux/processor.h>
 #include <linux/uaccess.h> //for user copy 
+#include <linux/printk.h>
 
+#include <string.h>
+#include <linux/net.h>
 #include <linux/cdev.h>
 #include <linux/init.h>
 #include <linux/slab.h>
