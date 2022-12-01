@@ -39,14 +39,14 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
     switch (cmd) {
         case IOCTL_GET_THREADSTRUCT:
             if (copy_from_user(&thread_params, (struct thread_parameters*) arg, sizeof(struct thread_parameters)) != 0 ) {
-                printk("Failed to read thread parameters\n");
+                pr_err("Failed to read thread parameters\n");
                 return -1;
             }
 
             printk("Got PID %d", thread_params.pid);
             task = get_pid_task(find_get_pid(thread_params.pid), PIDTYPE_PID);
             if (task == NULL) {
-                printk("Failed to read thread with PID %d\n", thread_params.pid);
+                pr_err("Failed to read thread with PID %d\n", thread_params.pid);
                 return -1;
             }
             thread = task->thread;
@@ -64,13 +64,13 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
             break;
         case IOCTL_GET_PCIDEV:
             if (copy_from_user(&pci_params, (struct pci_parameters*) arg, sizeof(struct pci_parameters)) != 0 ) {
-                printk("Failed to read pci parameters\n");
+                pr_err("Failed to read PCI parameters structure\n");
                 return -1;
             }
 
-            pci_dev = pci_get_device(pci_params.major, pci_params.minor, NULL);
+            pci_dev = pci_get_device(pci_params.vendor, pci_params.device, NULL);
             if (pci_dev == NULL) {
-                printk("Failed to read PCI with vendor ID %d and device ID %d\n", pci_params.major, pci_params.minor);
+                pr_err("Failed to read PCI with vendor ID %d and device ID %d\n", pci_params.vendor, pci_params.device);
                 return -1;
             }
             ret_pci.devfn = pci_dev->devfn;
