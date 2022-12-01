@@ -10,7 +10,7 @@
 #include <linux/uaccess.h> //for user copy 
 #include <linux/printk.h>
 
-#include <string.h>
+#include <linux/string.h>
 #include <linux/net.h>
 #include <linux/cdev.h>
 #include <linux/init.h>
@@ -93,13 +93,16 @@ static struct file_operations fops = {
 
 static int ana_device_init(void) {
     int ret_val;
+    pr_info("Ana Debug Module is initializing...\n");
     printk("Ana Debug Module is initializing...\n");
     ret_val = register_chrdev(ANA_IOC_MAGIC, DEVICE_NAME, &fops);
     if (ret_val < 0) {
+        pr_error("Failed to register the character device %s, return code %d\n", DEVICE_NAME, ret_val);
         printk("Failed to register the character device %s, return code %d\n", DEVICE_NAME, ret_val);
         return ret_val;
     }
 
+    pr_info("Successfully registered the character device %s with major number %d\n", DEVICE_NAME, ANA_IOC_MAGIC);
     printk("Successfully registered the character device %s with major number %d\n", DEVICE_NAME, ANA_IOC_MAGIC);
  
     return SUCCESS;
