@@ -29,12 +29,12 @@
 
 long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
     struct thread_parameters thread_params = {0};
-    struct task_struct* task;
+    struct task_struct* task = NULL;
     struct thread_struct thread = {0};
     struct ioctl_thread_struct ret_thread = {0};
 
     struct pci_parameters pci_params = {0};
-    struct pci_dev* pci_dev;
+    struct pci_dev* pci_dev = NULL;
     struct ioctl_pci_dev ret_pci = {0};
     switch (cmd) {
         case IOCTL_GET_THREADSTRUCT:
@@ -68,7 +68,8 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
                 return -1;
             }
 
-            pci_dev = pci_get_device(pci_params.vendor, pci_params.device, NULL);
+            //pci_dev = pci_get_device(pci_params.vendor, pci_params.device, NULL);
+            pci_dev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, NULL);
             if (pci_dev == NULL) {
                 pr_err("Failed to read PCI with vendor ID %d and device ID %d\n", pci_params.vendor, pci_params.device);
                 return -1;
