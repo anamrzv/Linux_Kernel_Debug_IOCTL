@@ -11,7 +11,13 @@ struct ioctl_pci_dev {
 };
 
 struct ioctl_thread_struct {
-    unsigned long 	sp; /* [GR1 ] kernel stack pointer */
+    unsigned long sp; /* [GR1 ] kernel stack pointer */
+    unsigned short es;
+	unsigned short ds;
+	unsigned short fsindex;
+	unsigned short gsindex;
+    unsigned long fsbase;
+	unsigned long gsbase;
 };
 
 struct pci_parameters {

@@ -50,16 +50,13 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
                 return -1;
             }
             thread = task->thread;
-            // ret_thread.esp0 = thread.esp0;
-            // ret_thread.fp = thread.fp;
-            // ret_thread.ksp = thread.ksp;
-            // ret_thread.lr = thread.lr;
-            // ret_thread.pc = thread.pc;
-            // ret_thread.seqstat = thread.seqstat;
-            // ret_thread.single_step_addr = thread.single_step_addr;
+            ret_thread.es = thread.es;
+            ret_thread.ds = thread.ds;
+            ret_thread.fsindex = thread.fsindex;
+            ret_thread.gsindex = thread.gsindex;
+            ret_thread.fsbase = thread.fbase;
+            ret_thread.gsbase = thread.gsbase;
             ret_thread.sp = thread.sp;
-            // ret_thread.usp = thread.usp;
-            // ret_thread.wchan = thread.wchan;
             copy_to_user(thread_params.write_pointer, &ret_thread, sizeof(struct ioctl_thread_struct));
             break;
         case IOCTL_GET_PCIDEV:
