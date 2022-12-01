@@ -28,8 +28,8 @@ void print_thread(struct ioctl_thread_struct* th) {
     printf("ds %d\n", th->ds);
     printf("fsindex %d\n", th->fsindex);
     printf("gsindex %d\n", th->gsindex);
-    printf("fbase %d\n", th->fsbase);
-    printf("gsbase %D\n", th->gsbase);
+    printf("fbase %ld\n", th->fsbase);
+    printf("gsbase %ld\n", th->gsbase);
     printf("[GR1 ] kernel stack pointer %ld\n", th->sp);
     // printf("[GR2 ] kernel frame pointer %d\n", th->fp);
     // printf("link register %d", th->lr);
