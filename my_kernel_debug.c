@@ -97,7 +97,7 @@ static int ana_device_init(void) {
     printk("Ana Debug Module is initializing...\n");
     ret_val = register_chrdev(ANA_IOC_MAGIC, DEVICE_NAME, &fops);
     if (ret_val < 0) {
-        pr_error("Failed to register the character device %s, return code %d\n", DEVICE_NAME, ret_val);
+        pr_err("Failed to register the character device %s, return code %d\n", DEVICE_NAME, ret_val);
         printk("Failed to register the character device %s, return code %d\n", DEVICE_NAME, ret_val);
         return ret_val;
     }
