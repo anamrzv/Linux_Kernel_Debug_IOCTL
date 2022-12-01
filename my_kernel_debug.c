@@ -29,12 +29,12 @@
 
 long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
     struct thread_parameters thread_params = {0};
-    struct task_struct* task = {0};
+    struct task_struct* task;
     struct thread_struct thread = {0};
     struct ioctl_thread_struct ret_thread = {0};
 
     struct pci_parameters pci_params = {0};
-    struct pci_dev* pci_dev = {0};
+    struct pci_dev* pci_dev;
     struct ioctl_pci_dev ret_pci = {0};
     switch (cmd) {
         case IOCTL_GET_THREADSTRUCT:
