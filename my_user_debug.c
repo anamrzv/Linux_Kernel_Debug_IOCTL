@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
     if (argc == 4 && strcmp((char*) argv[1], "pci_dev") == 0) option = PCI_DEV_OPTION;
     else if (argc == 3 && strcmp((char*) argv[1], "thread_struct") == 0) option = THREAD_STRUCT_OPTION;
     else {
-        printf("Please check that your argument is either 'pci_dev <major number> <minor number>' or 'thread_struct <thread PID>'\n");
+        printf("Please check that your argument is either 'pci_dev <major number hex> <minor number hex>' or 'thread_struct <thread PID>'\n");
         return -1;
     }
     
@@ -64,8 +64,8 @@ int main(int argc, char **argv) {
 
     if (option == PCI_DEV_OPTION) {
         struct ioctl_pci_dev pci_dev = {0};
-        uint32_t vendor = strtoul(argv[2], NULL, 10);
-        uint32_t device = strtoul(argv[3], NULL, 10);
+        uint32_t vendor = strtoul(argv[2], NULL, 16);
+        uint32_t device = strtoul(argv[3], NULL, 16);
         struct pci_parameters pci_params = { .write_pointer = &pci_dev, .vendor = vendor, .device = device };
         uint8_t ret = ioctl(fd, IOCTL_GET_PCIDEV, &pci_params);
         printf("ret code %d\n", ret);
