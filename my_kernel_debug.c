@@ -30,7 +30,7 @@
 long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
     struct thread_parameters thread_params = {0};
     struct task_struct* task = NULL;
-    struct thread_struct thread = {0};
+    struct thread_struct thread;
     struct ioctl_thread_struct ret_thread = {0};
 
     struct pci_parameters pci_params = {0};
@@ -50,9 +50,13 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
                 return -1;
             }
             thread = task->thread;
-            pr_info("es %hu", thread.es);
-            pr_info("ds %hu", thread.ds);
-            pr_info("fsindex %hu", thread.fsindex);
+            pr_info("es %hu\n", thread.es);
+            pr_info("ds %hu\n", thread.ds);
+            pr_info("fsindex %hu\n", thread.fsindex);
+            pr_info("gsindex %hu\n", thread.gsindex);
+            pr_info("Frame base %lu\n", thread.fsbase);
+            pr_info("gsbase %lu\n", thread.gsbase);
+            pr_info("[GR1] kernel stack pointer %lu\n", thread.sp);
             ret_thread.es = thread.es;
             ret_thread.ds = thread.ds;
             ret_thread.fsindex = thread.fsindex;

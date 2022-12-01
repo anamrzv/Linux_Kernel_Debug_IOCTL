@@ -15,12 +15,12 @@
 #define IOCTL_GET_PCIDEV _IOR(ANA_IOC_MAGIC, 1, struct pci_parameters*)
 
 void print_pci(struct ioctl_pci_dev* pci) {
-    printf("devfn %u\n", pci->devfn);
-    printf("vendor %hu\n", pci->vendor);
-    printf("device %hu\n", pci->device);
-    printf("class %u\n", pci->clas);
-    printf("revision %u\n", pci->revision );
-    printf("hdr_type %u\n", pci->hdr_type);
+    printf("Vendor ID %hu\n", pci->vendor);
+    printf("Device ID %hu\n", pci->device);
+    printf("Encoded device & function index %u\n", pci->devfn);
+    printf("Class Code %u\n", pci->clas);
+    printf("Revision ID %u\n", pci->revision);
+    printf("Header Type %u\n", pci->hdr_type);
 }
 
 void print_thread(struct ioctl_thread_struct* th) {
@@ -28,11 +28,9 @@ void print_thread(struct ioctl_thread_struct* th) {
     printf("ds %hu\n", th->ds);
     printf("fsindex %hu\n", th->fsindex);
     printf("gsindex %hu\n", th->gsindex);
-    printf("fbase %lu\n", th->fsbase);
+    printf("Frame base %lu\n", th->fsbase);
     printf("gsbase %lu\n", th->gsbase);
-    printf("[GR1 ] kernel stack pointer %lu\n", th->sp);
-    // printf("[GR2 ] kernel frame pointer %d\n", th->fp);
-    // printf("link register %d", th->lr);
+    printf("[GR1] kernel stack pointer %lu\n", th->sp);
 }
 
 int main(int argc, char **argv) {
@@ -58,24 +56,22 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    printf("%d File descryptor\n",fd);
-    printf("%d option\n", option);
-
     if (option == PCI_DEV_OPTION) {
         struct ioctl_pci_dev pci_dev = {0};
         uint32_t vendor = strtoul(argv[2], NULL, 16);
         uint32_t device = strtoul(argv[3], NULL, 16);
         struct pci_parameters pci_params = { .write_pointer = &pci_dev, .vendor = vendor, .device = device };
         uint8_t ret = ioctl(fd, IOCTL_GET_PCIDEV, &pci_params);
-        printf("ret code %d\n", ret);
         if (ret == 0) print_pci(&pci_dev);
+        else printf("Failed to get info from kernel. Check if the parameters are right.\n");
     } else if (option == THREAD_STRUCT_OPTION) {
         struct ioctl_thread_struct thread = {0};
         uint32_t pid = strtoul(argv[2], NULL, 10);
         struct thread_parameters thread_params = { .write_pointer = &thread, .pid = pid };
         uint8_t ret = ioctl(fd, IOCTL_GET_THREADSTRUCT, &thread_params);
-        printf("ret code%d\n", ret);
         if (ret == 0) print_thread(&thread);
+        else printf("Failed to get info from kernel. Check if the parameters are right.\n");
     }
 
+    return 0;
 }
