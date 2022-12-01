@@ -28,9 +28,9 @@ void print_thread(struct ioctl_thread_struct* th) {
     printf("ds %hu\n", th->ds);
     printf("fsindex %hu\n", th->fsindex);
     printf("gsindex %hu\n", th->gsindex);
-    printf("fbase %ld\n", th->fsbase);
-    printf("gsbase %ld\n", th->gsbase);
-    printf("[GR1 ] kernel stack pointer %ld\n", th->sp);
+    printf("fbase %lu\n", th->fsbase);
+    printf("gsbase %lu\n", th->gsbase);
+    printf("[GR1 ] kernel stack pointer %lu\n", th->sp);
     // printf("[GR2 ] kernel frame pointer %d\n", th->fp);
     // printf("link register %d", th->lr);
 }

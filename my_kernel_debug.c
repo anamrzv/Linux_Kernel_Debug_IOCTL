@@ -50,9 +50,9 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
                 return -1;
             }
             thread = task->thread;
-            pr_info("es %u", thread.es);
-            pr_info("ds %u", thread.ds);
-            pr_info("fsindex %u", thread.fsindex);
+            pr_info("es %hu", thread.es);
+            pr_info("ds %hu", thread.ds);
+            pr_info("fsindex %hu", thread.fsindex);
             ret_thread.es = thread.es;
             ret_thread.ds = thread.ds;
             ret_thread.fsindex = thread.fsindex;
