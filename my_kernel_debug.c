@@ -57,7 +57,7 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
             ret_thread.ds = thread.ds;
             ret_thread.fsindex = thread.fsindex;
             ret_thread.gsindex = thread.gsindex;
-            ret_thread.fsbase = thread.fbase;
+            ret_thread.fsbase = thread.fsbase;
             ret_thread.gsbase = thread.gsbase;
             ret_thread.sp = thread.sp;
             copy_to_user(thread_params.write_pointer, &ret_thread, sizeof(struct ioctl_thread_struct));
