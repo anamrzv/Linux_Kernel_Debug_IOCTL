@@ -1,5 +1,6 @@
 #include <linux/kernel.h> 
 #include <linux/module.h>
+#include <linux/init.h>
 
 #include <linux/ioctl.h>
 #include <linux/fs.h> //for file operations
@@ -8,14 +9,6 @@
 #include <linux/pid.h>
 #include <linux/processor.h>
 #include <linux/uaccess.h> //for user copy 
-#include <linux/printk.h>
-
-#include <linux/string.h>
-#include <linux/net.h>
-#include <linux/cdev.h>
-#include <linux/init.h>
-#include <linux/slab.h>
-
 
 #include "ioctl_structures.h"
 
@@ -26,6 +19,7 @@
 
 #define DEVICE_NAME "ana_device"
 #define SUCCESS 0
+#define ERROR -1
 
 long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
     struct thread_parameters thread_params = {0};
@@ -40,23 +34,16 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
         case IOCTL_GET_THREADSTRUCT:
             if (copy_from_user(&thread_params, (struct thread_parameters*) arg, sizeof(struct thread_parameters)) != 0 ) {
                 pr_err("Failed to read thread parameters\n");
-                return -1;
+                return ERROR;
             }
 
             printk("Got PID %d", thread_params.pid);
             task = get_pid_task(find_get_pid(thread_params.pid), PIDTYPE_PID);
             if (task == NULL) {
                 pr_err("Failed to read thread with PID %d\n", thread_params.pid);
-                return -1;
+                return ERROR;
             }
             thread = task->thread;
-            pr_info("es %hu\n", thread.es);
-            pr_info("ds %hu\n", thread.ds);
-            pr_info("fsindex %hu\n", thread.fsindex);
-            pr_info("gsindex %hu\n", thread.gsindex);
-            pr_info("Frame base %lu\n", thread.fsbase);
-            pr_info("gsbase %lu\n", thread.gsbase);
-            pr_info("[GR1] kernel stack pointer %lu\n", thread.sp);
             ret_thread.es = thread.es;
             ret_thread.ds = thread.ds;
             ret_thread.fsindex = thread.fsindex;
@@ -69,13 +56,13 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
         case IOCTL_GET_PCIDEV:
             if (copy_from_user(&pci_params, (struct pci_parameters*) arg, sizeof(struct pci_parameters)) != 0 ) {
                 pr_err("Failed to read PCI parameters structure\n");
-                return -1;
+                return ERROR;
             }
 
             pci_dev = pci_get_device(pci_params.vendor, pci_params.device, NULL);
             if (pci_dev == NULL) {
                 pr_err("Failed to read PCI with vendor ID %d and device ID %d\n", pci_params.vendor, pci_params.device);
-                return -1;
+                return ERROR;
             }
             ret_pci.devfn = pci_dev->devfn;
             ret_pci.device = pci_dev->device;
@@ -84,7 +71,6 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
             ret_pci.vendor = pci_dev->vendor;
             ret_pci.clas = pci_dev->class;
             copy_to_user(pci_params.write_pointer, &ret_pci, sizeof(struct ioctl_pci_dev));
-            
             break;
     }
     return SUCCESS;
@@ -107,7 +93,7 @@ static int ana_device_init(void) {
     pr_info("Successfully registered the character device %s with major number %d\n", DEVICE_NAME, ANA_IOC_MAGIC); 
     return SUCCESS;
 }
- 
+  
 static void ana_device_exit(void) {
     unregister_chrdev(ANA_IOC_MAGIC, DEVICE_NAME);
     printk("Successfully unregistered the character device %s\n", DEVICE_NAME);
