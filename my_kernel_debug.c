@@ -68,9 +68,9 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
                 return -1;
             }
 
-            pci_dev = pci_get_device(pci_params.major, pci_params.minor, pci_dev);
+            pci_dev = pci_get_device(pci_params.major, pci_params.minor, NULL);
             if (pci_dev == NULL) {
-                printk("Failed to read PCI with major %d and minor %d\n", pci_params.major, pci_params.minor);
+                printk("Failed to read PCI with vendor ID %d and device ID %d\n", pci_params.major, pci_params.minor);
                 return -1;
             }
             ret_pci.devfn = pci_dev->devfn;
@@ -91,24 +91,20 @@ static struct file_operations fops = {
 	.owner = THIS_MODULE, //macro: pointer to the module structure of this module
 };
 
-static int __init ana_device_init(void) {
+static int ana_device_init(void) {
     int ret_val;
     pr_info("Ana Debug Module is initializing...\n");
-    printk(KERN_WARNING "Ana Debug Module is initializing...\n");
     ret_val = register_chrdev(ANA_IOC_MAGIC, DEVICE_NAME, &fops);
     if (ret_val < 0) {
         pr_err("Failed to register the character device %s, return code %d\n", DEVICE_NAME, ret_val);
-        printk(KERN_WARNING "Failed to register the character device %s, return code %d\n", DEVICE_NAME, ret_val);
         return ret_val;
     }
 
-    pr_info("Successfully registered the character device %s with major number %d\n", DEVICE_NAME, ANA_IOC_MAGIC);
-    printk(KERN_WARNING "Successfully registered the character device %s with major number %d\n", DEVICE_NAME, ANA_IOC_MAGIC);
- 
+    pr_info("Successfully registered the character device %s with major number %d\n", DEVICE_NAME, ANA_IOC_MAGIC); 
     return SUCCESS;
 }
  
-static void __exit ana_device_exit(void) {
+static void ana_device_exit(void) {
     unregister_chrdev(ANA_IOC_MAGIC, DEVICE_NAME);
     printk("Successfully unregistered the character device %s\n", DEVICE_NAME);
 }

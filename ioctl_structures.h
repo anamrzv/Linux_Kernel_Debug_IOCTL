@@ -16,13 +16,13 @@ struct ioctl_thread_struct {
 
 struct pci_parameters {
     struct ioctl_pci_dev* write_pointer;
-    uint16_t major;
-    uint16_t minor;
+    uint32_t vendor;
+    uint32_t device;
 };
 
 struct thread_parameters {
     struct ioctl_thread_struct* write_pointer;
-    uint16_t pid;
+    uint32_t pid;
 };
 
 #endif
