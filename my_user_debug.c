@@ -35,6 +35,7 @@ void init_pci_params(struct ioctl_pci_dev* ptr, const uint32_t v, const uint32_t
     pci_params->vendor = v;
     pci_params->write_pointer = ptr;
     target = pci_params;
+    printf("device %d\n", d);
 }
 
 void init_thread_params(struct ioctl_thread_struct* ptr, const uint32_t pid, struct thread_parameters* target) {
@@ -58,6 +59,7 @@ int main(int argc, char **argv) {
         option = PCI_DEV_OPTION;
         first = strtoul(argv[2], NULL, 16);
         second = strtoul(argv[3], NULL, 16);
+        print("first %d", first);
     }
     else if (argc == 3 && strcmp(argv[1], "thread_struct") == 0) {
         option = THREAD_STRUCT_OPTION;
