@@ -75,20 +75,15 @@ int main(int argc, char **argv) {
 
     switch (option) {
         case PCI_DEV_OPTION:
-            uint32_t vendor = strtoul(argv[2], NULL, 16);
-            uint32_t device = strtoul(argv[3], NULL, 16);
-            init_pci_params(&pci_dev, vendor, device, pci_params);
-            uint8_t ret = ioctl(fd, IOCTL_GET_PCIDEV, &pci_params);
-            if (ret == 0) print_pci(&pci_dev);
+            init_pci_params(&pci_dev, strtoul(argv[2], NULL, 16), strtoul(argv[3], NULL, 16), pci_params);
+            if (ioctl(fd, IOCTL_GET_PCIDEV, &pci_params)) print_pci(&pci_dev);
             else printf("Failed to get info from kernel. Check if the parameters are right.\n");
             free(pci_params->write_pointer);
             free(pci_params);
             break;
         case THREAD_STRUCT_OPTION:
-            uint32_t pid = strtoul(argv[2], NULL, 10);
-            init_thread_params(&thread, pid);
-            uint8_t ret = ioctl(fd, IOCTL_GET_THREADSTRUCT, &thread_params);
-            if (ret == 0) print_thread(&thread);
+            init_thread_params(&thread, strtoul(argv[2], NULL, 10));
+            if (ioctl(fd, IOCTL_GET_THREADSTRUCT, &thread_params)) print_thread(&thread);
             else printf("Failed to get info from kernel. Check if the parameters are right.\n");
             free(thread_params->write_pointer);
             free(thread_params);
