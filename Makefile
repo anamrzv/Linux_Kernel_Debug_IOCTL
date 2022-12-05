@@ -15,4 +15,7 @@ unload:
 	rmmod ./my_kernel_debug.ko
 
 build1:
-	gcc -pedantic-errors -Wall -Werror -g3 -O0 --std=c99 -fsanitize=address,undefined,leak -c my_user_debug.c -o main
+	gcc -pedantic-errors -Wall -Werror -g3 -O0 --std=c99 -fsanitize=address,undefined,leak -c my_user_debug.c 
+
+build2:
+	gcc my_user_debug.o -o main
