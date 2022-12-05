@@ -22,14 +22,14 @@
 #define ERROR -1
 
 long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
-    struct thread_parameters thread_params = {0};
+    struct thread_parameters thread_params;
     struct task_struct* task = NULL;
     struct thread_struct thread;
-    struct ioctl_thread_struct ret_thread = {0};
+    struct ioctl_thread_struct ret_thread;
 
-    struct pci_parameters pci_params = {0};
+    struct pci_parameters pci_params;
     struct pci_dev* pci_dev = NULL;
-    struct ioctl_pci_dev ret_pci = {0};
+    struct ioctl_pci_dev ret_pci;
     switch (cmd) {
         case IOCTL_GET_THREADSTRUCT:
             if (copy_from_user(&thread_params, (struct thread_parameters*) arg, sizeof(struct thread_parameters)) != 0 ) {
