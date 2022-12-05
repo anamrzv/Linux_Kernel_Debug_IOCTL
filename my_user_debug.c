@@ -29,7 +29,7 @@ void print_thread(const struct ioctl_thread_struct* th) {
     printf("[GR1] kernel stack pointer %lu\n", th->sp);
 }
 
-void init_pci_params(struct ioctl_pci_dev* ptr, const uint_32 v, const uint32_t d, struct pci_parameters* target) {
+void init_pci_params(struct ioctl_pci_dev* ptr, const uint32_t v, const uint32_t d, struct pci_parameters* target) {
     struct pci_parameters* pci_params = malloc(sizeof(struct pci_parameters));
     pci_params->device = d;
     pci_params->vendor = v
@@ -37,10 +37,10 @@ void init_pci_params(struct ioctl_pci_dev* ptr, const uint_32 v, const uint32_t 
     target = pci_params;
 }
 
-void init_thread_params(struct ioctl_thread_struct* ptr, const uint_32 pid, struct thread_parameters* target) {
+void init_thread_params(struct ioctl_thread_struct* ptr, const uint32_t pid, struct thread_parameters* target) {
     struct thread_parameters* thread_params = malloc(sizeof(struct thread_parameters));
     thread_params->write_pointer = ptr;
-    thread_params->pid = strtoul(pid, NULL, 10);
+    thread_params->pid = pid;
     target = thread_params;
 }
 
