@@ -55,7 +55,6 @@ int main(int argc, char **argv) {
 
     if (argc == 4 && strcmp(argv[1], "pci_dev") == 0) {
         option = PCI_DEV_OPTION;
-        printf("first %d", first);
     }
     else if (argc == 3 && strcmp(argv[1], "thread_struct") == 0) {
         option = THREAD_STRUCT_OPTION;
