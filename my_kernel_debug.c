@@ -72,6 +72,8 @@ long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
             ret_pci.clas = pci_dev->class;
             copy_to_user(pci_params.write_pointer, &ret_pci, sizeof(struct ioctl_pci_dev));
             break;
+        default:
+            return ERROR;
     }
     return SUCCESS;
 }
@@ -103,7 +105,7 @@ static void ana_device_exit(void) {
 module_init(ana_device_init);
 module_exit(ana_device_exit);
 
-MODULE_LICENSE("GPL"); //TODO:
+MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("Module for sending debug info about task_struct");
 MODULE_VERSION("1.0");
  
