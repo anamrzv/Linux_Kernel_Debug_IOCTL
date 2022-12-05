@@ -70,9 +70,11 @@ int main(int argc, char **argv) {
     struct pci_parameters* pci_params;
     struct thread_parameters* thread_params;
 
+    struct ioctl_pci_dev pci_dev;
+    struct ioctl_thread_struct thread;
+
     switch (option) {
         case PCI_DEV_OPTION:
-            struct ioctl_pci_dev pci_dev;
             uint32_t vendor = strtoul(argv[2], NULL, 16);
             uint32_t device = strtoul(argv[3], NULL, 16);
             init_pci_params(&pci_dev, vendor, device, pci_params);
@@ -83,7 +85,6 @@ int main(int argc, char **argv) {
             free(pci_params);
             break;
         case THREAD_STRUCT_OPTION:
-            struct ioctl_thread_struct thread;
             uint32_t pid = strtoul(argv[2], NULL, 10);
             init_thread_params(&thread, pid);
             uint8_t ret = ioctl(fd, IOCTL_GET_THREADSTRUCT, &thread_params);
