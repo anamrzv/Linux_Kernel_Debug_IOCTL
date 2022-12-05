@@ -31,8 +31,9 @@ void print_thread(const struct ioctl_thread_struct* th) {
 
 void init_pci_params(struct ioctl_pci_dev* ptr, const char* v, const char* d, struct pci_parameters* target) {
     struct pci_parameters* pci_params = malloc(sizeof(struct pci_parameters));
-    pci_params->device = strtoul(v, NULL, 16);
-    pci_params->vendor = strtoul(d, NULL, 16);
+    printf("arg %s", d);
+    pci_params->device = strtoul(d, NULL, 16);
+    pci_params->vendor = strtoul(v, NULL, 16);
     pci_params->write_pointer = ptr;
     target = pci_params;
     printf("device %d\n", pci_params->device);
