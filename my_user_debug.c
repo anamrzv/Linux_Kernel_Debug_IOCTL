@@ -29,7 +29,7 @@ void print_thread(const struct ioctl_thread_struct* th) {
     printf("[GR1] kernel stack pointer %lu\n", th->sp);
 }
 
-void init_pci_params(struct ioctl_pci_dev* ptr, uint32_t v, uint32_t d, struct pci_parameters* target) {
+void init_pci_params(struct ioctl_pci_dev* ptr, const uint32_t v, const uint32_t d, struct pci_parameters* target) {
     struct pci_parameters* pci_params = malloc(sizeof(struct pci_parameters));
     pci_params->device = d;
     pci_params->vendor = v;
@@ -37,7 +37,7 @@ void init_pci_params(struct ioctl_pci_dev* ptr, uint32_t v, uint32_t d, struct p
     target = pci_params;
 }
 
-void init_thread_params(struct ioctl_thread_struct* ptr, uint32_t pid, struct thread_parameters* target) {
+void init_thread_params(struct ioctl_thread_struct* ptr, const uint32_t pid, struct thread_parameters* target) {
     struct thread_parameters* thread_params = malloc(sizeof(struct thread_parameters));
     thread_params->write_pointer = ptr;
     thread_params->pid = pid;
@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
             free(pci_params);
             break;
         case THREAD_STRUCT_OPTION:
-            init_thread_params(&thread, strtoul(argv[2], NULL, 10));
+            init_thread_params(&thread, strtoul(argv[2], NULL, 10), thread_params);
             if (ioctl(fd, IOCTL_GET_THREADSTRUCT, &thread_params)) print_thread(&thread);
             else printf("Failed to get info from kernel. Check if the parameters are right.\n");
             free(thread_params->write_pointer);
