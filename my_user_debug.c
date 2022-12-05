@@ -81,8 +81,8 @@ int main(int argc, char **argv) {
     struct pci_parameters* pci_params;
     struct thread_parameters* thread_params;
 
-    struct ioctl_pci_dev pci_dev;
-    struct ioctl_thread_struct thread;
+    struct ioctl_pci_dev pci_dev = {0};
+    struct ioctl_thread_struct thread = {0};
 
     switch (option) {
         case PCI_DEV_OPTION:
