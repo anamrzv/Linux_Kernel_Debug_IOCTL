@@ -32,7 +32,7 @@ void print_thread(const struct ioctl_thread_struct* th) {
 void init_pci_params(struct ioctl_pci_dev* ptr, const uint32_t v, const uint32_t d, struct pci_parameters* target) {
     struct pci_parameters* pci_params = malloc(sizeof(struct pci_parameters));
     pci_params->device = d;
-    pci_params->vendor = v
+    pci_params->vendor = v;
     pci_params->write_pointer = ptr;
     target = pci_params;
 }
