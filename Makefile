@@ -3,7 +3,7 @@ obj-m += my_kernel_debug.o
 PWD := $(CURDIR)
  
 all:
-	make -C -pedantic-errors -Wall -Werror -g3 -O0 --std=c99 -fsanitize=address,undefined,leak /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
  
 clean:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
@@ -15,7 +15,4 @@ unload:
 	rmmod ./my_kernel_debug.ko
 
 build1:
-	gcc -c my_user_debug.c
-
-build2:
-	gcc my_user_debug.o -o main
+	gcc -pedantic-errors -Wall -Werror -g3 -O0 --std=c99 -fsanitize=address,undefined,leak -c my_user_debug.c -o main
