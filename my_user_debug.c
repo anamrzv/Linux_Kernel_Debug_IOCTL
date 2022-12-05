@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
         option = PCI_DEV_OPTION;
         first = strtoul(argv[2], NULL, 16);
         second = strtoul(argv[3], NULL, 16);
-        print("first %d", first);
+        printd("first %d", first);
     }
     else if (argc == 3 && strcmp(argv[1], "thread_struct") == 0) {
         option = THREAD_STRUCT_OPTION;
