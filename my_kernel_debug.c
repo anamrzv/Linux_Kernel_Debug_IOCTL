@@ -12,23 +12,18 @@
 
 #include "ioctl_structures.h"
 
-#define ANA_IOC_MAGIC '\x45'
-
-#define IOCTL_GET_THREADSTRUCT _IOR(ANA_IOC_MAGIC, 0, struct thread_parameters*)
-#define IOCTL_GET_PCIDEV _IOR(ANA_IOC_MAGIC, 1, struct pci_parameters*)
-
 #define DEVICE_NAME "ana_device"
 #define SUCCESS 0
 #define ERROR -1
 
 long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
     struct thread_parameters thread_params;
-    struct task_struct* task = NULL;
+    struct task_struct* task;
     struct thread_struct thread;
     struct ioctl_thread_struct ret_thread;
 
     struct pci_parameters pci_params;
-    struct pci_dev* pci_dev = NULL;
+    struct pci_dev* pci_dev;
     struct ioctl_pci_dev ret_pci;
     switch (cmd) {
         case IOCTL_GET_THREADSTRUCT:

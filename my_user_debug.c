@@ -6,15 +6,11 @@
 #include <inttypes.h>
 #include "ioctl_structures.h"
 
-#define ANA_IOC_MAGIC '\x45'
 #define PCI_DEV_OPTION 1
 #define THREAD_STRUCT_OPTION 2
 #define DEVICE_FILE "/dev/ana_device"
 
-#define IOCTL_GET_THREADSTRUCT _IOR(ANA_IOC_MAGIC, 0, struct thread_parameters*)
-#define IOCTL_GET_PCIDEV _IOR(ANA_IOC_MAGIC, 1, struct pci_parameters*)
-
-void print_pci(struct ioctl_pci_dev* pci) {
+void print_pci(const struct ioctl_pci_dev* pci) {
     printf("Vendor ID %hu\n", pci->vendor);
     printf("Device ID %hu\n", pci->device);
     printf("Encoded device & function index %u\n", pci->devfn);
@@ -23,7 +19,7 @@ void print_pci(struct ioctl_pci_dev* pci) {
     printf("Header Type %u\n", pci->hdr_type);
 }
 
-void print_thread(struct ioctl_thread_struct* th) {
+void print_thread(const struct ioctl_thread_struct* th) {
     printf("es %hu\n", th->es);
     printf("ds %hu\n", th->ds);
     printf("fsindex %hu\n", th->fsindex);
@@ -31,6 +27,21 @@ void print_thread(struct ioctl_thread_struct* th) {
     printf("Frame base %lu\n", th->fsbase);
     printf("gsbase %lu\n", th->gsbase);
     printf("[GR1] kernel stack pointer %lu\n", th->sp);
+}
+
+void init_pci_params(struct ioctl_pci_dev* ptr, uint32_t v, uint32_t d, struct pci_parameters* target) {
+    struct pci_parameters* pci_params = malloc(sizeof(struct pci_parameters));
+    pci_params->device = d;
+    pci_params->vendor = v;
+    pci_params->write_pointer = ptr;
+    target = pci_params;
+}
+
+void init_thread_params(struct ioctl_thread_struct* ptr, uint32_t pid, struct thread_parameters* target) {
+    struct thread_parameters* thread_params = malloc(sizeof(struct thread_parameters));
+    thread_params->write_pointer = ptr;
+    thread_params->pid = pid;
+    target = thread_params;
 }
 
 int main(int argc, char **argv) {
@@ -41,14 +52,14 @@ int main(int argc, char **argv) {
 
     int option;
 
-    if (argc == 4 && strcmp((char*) argv[1], "pci_dev") == 0) option = PCI_DEV_OPTION;
-    else if (argc == 3 && strcmp((char*) argv[1], "thread_struct") == 0) option = THREAD_STRUCT_OPTION;
+    if (argc == 4 && strcmp(argv[1], "pci_dev") == 0) option = PCI_DEV_OPTION;
+    else if (argc == 3 && strcmp(argv[1], "thread_struct") == 0) option = THREAD_STRUCT_OPTION;
     else {
         printf("Please check that your argument is either 'pci_dev <major number hex> <minor number hex>' or 'thread_struct <thread PID>'\n");
         return -1;
     }
     
-    printf("Trying to request kernel for debug info about structure: %s\n", (char*) argv[1]);
+    printf("Trying to request kernel for debug info about structure: %s\n", argv[1]);
     
     int fd = open(DEVICE_FILE, O_WRONLY);
     if (fd < 0) {
@@ -56,21 +67,34 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    if (option == PCI_DEV_OPTION) {
-        struct ioctl_pci_dev pci_dev = {0};
-        uint32_t vendor = strtoul(argv[2], NULL, 16);
-        uint32_t device = strtoul(argv[3], NULL, 16);
-        struct pci_parameters pci_params = { .write_pointer = &pci_dev, .vendor = vendor, .device = device };
-        uint8_t ret = ioctl(fd, IOCTL_GET_PCIDEV, &pci_params);
-        if (ret == 0) print_pci(&pci_dev);
-        else printf("Failed to get info from kernel. Check if the parameters are right.\n");
-    } else if (option == THREAD_STRUCT_OPTION) {
-        struct ioctl_thread_struct thread = {0};
-        uint32_t pid = strtoul(argv[2], NULL, 10);
-        struct thread_parameters thread_params = { .write_pointer = &thread, .pid = pid };
-        uint8_t ret = ioctl(fd, IOCTL_GET_THREADSTRUCT, &thread_params);
-        if (ret == 0) print_thread(&thread);
-        else printf("Failed to get info from kernel. Check if the parameters are right.\n");
+    struct pci_parameters* pci_params;
+    struct thread_parameters* thread_params;
+
+    switch (option) {
+        case PCI_DEV_OPTION:
+            struct ioctl_pci_dev pci_dev;
+            uint32_t vendor = strtoul(argv[2], NULL, 16);
+            uint32_t device = strtoul(argv[3], NULL, 16);
+            init_pci_params(&pci_dev, vendor, device, pci_params);
+            uint8_t ret = ioctl(fd, IOCTL_GET_PCIDEV, &pci_params);
+            if (ret == 0) print_pci(&pci_dev);
+            else printf("Failed to get info from kernel. Check if the parameters are right.\n");
+            free(pci_params->write_pointer);
+            free(pci_params);
+            break;
+        case THREAD_STRUCT_OPTION:
+            struct ioctl_thread_struct thread;
+            uint32_t pid = strtoul(argv[2], NULL, 10);
+            init_thread_params(&thread, pid);
+            uint8_t ret = ioctl(fd, IOCTL_GET_THREADSTRUCT, &thread_params);
+            if (ret == 0) print_thread(&thread);
+            else printf("Failed to get info from kernel. Check if the parameters are right.\n");
+            free(thread_params->write_pointer);
+            free(thread_params);
+            break;
+        default:
+            printf("No such option\n");
+            break;
     }
 
     return 0;

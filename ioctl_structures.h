@@ -1,6 +1,10 @@
 #ifndef IOCTL_STRUCTURES
 #define IOCTL_STRUCTURES
 
+#define ANA_IOC_MAGIC '\x45'
+#define IOCTL_GET_THREADSTRUCT _IOR(ANA_IOC_MAGIC, 0, struct thread_parameters*)
+#define IOCTL_GET_PCIDEV _IOR(ANA_IOC_MAGIC, 1, struct pci_parameters*)
+
 struct ioctl_pci_dev {
     unsigned int devfn;
     unsigned short vendor;
