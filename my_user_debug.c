@@ -52,18 +52,13 @@ int main(int argc, char **argv) {
     }
 
     int option;
-    uint32_t first;
-    uint32_t second;
 
     if (argc == 4 && strcmp(argv[1], "pci_dev") == 0) {
         option = PCI_DEV_OPTION;
-        first = strtoul(argv[2], NULL, 16);
-        second = strtoul(argv[3], NULL, 16);
         printf("first %d", first);
     }
     else if (argc == 3 && strcmp(argv[1], "thread_struct") == 0) {
         option = THREAD_STRUCT_OPTION;
-        first = strtoul(argv[2], NULL, 10);
     }
     else {
         printf("Please check that your argument is either 'pci_dev <major number hex> <minor number hex>' or 'thread_struct <thread PID>'\n");
