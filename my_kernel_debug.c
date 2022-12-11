@@ -16,7 +16,7 @@
 #define SUCCESS 0
 #define ERROR -1
 
-long device_ioctl(struct file *file, unsigned int cmd, unsigned long arg) {
+long device_ioctl(struct file* file, unsigned int cmd, unsigned long arg) {
     struct thread_parameters thread_params;
     struct task_struct* task;
     struct thread_struct thread;
@@ -101,6 +101,5 @@ module_init(ana_device_init);
 module_exit(ana_device_exit);
 
 MODULE_LICENSE("GPL");
-MODULE_DESCRIPTION("Module for sending debug info about task_struct");
+MODULE_DESCRIPTION("Module for sending debug info about thread_struct and pci_dev");
 MODULE_VERSION("1.0");
- 
